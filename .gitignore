@@ -1,0 +1,42 @@
+# Unreal Engine Git Ignore
+# https://github.com/github/gitignore/blob/main/UnrealEngine.gitignore
+
+# Binaries, Intermediate, and Saved folders
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+FileOpenOrder/
+
+# Visual Studio files
+.vs/
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+
+# Xcode files
+*.xcodeproj
+*.xcworkspace
+
+# Project files
+*.pro
+*.user
+
+# Built-in plugins folders
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
+
+# External assets
+Content/ExternalActors/
+Content/ExternalObjects/
+
+# Others
+.idea/
+.vscode/
+*.DS_Store
+*.opendb
+*.tlog

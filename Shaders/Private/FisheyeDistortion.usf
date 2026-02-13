@@ -1,0 +1,45 @@
+#include "/Engine/Public/Platform.ush"
+#include "/Engine/Private/Common.ush"
+#include "/Engine/Private/ScreenPass.ush"
+
+// 피쉬아이 왜곡 파라미터
+float DistortionStrength;
+float2 DistortionCenter;
+
+// TSR/TAA 대응을 위한 이전 프레임 파라미터 (Motion Vector 보정용)
+float PrevDistortionStrength;
+
+void MainPS(
+	float4 InPosition : SV_POSITION,
+	float2 InUV : TEXCOORD0,
+	out float4 OutColor : SV_Target0
+)
+{
+	// UV를 [-1, 1] 범위의 좌표계로 변환 (중앙 원점)
+	float2 Coords = (InUV - 0.5) * 2.0;
+	
+	// 반지름(r) 계산
+	float r = length(Coords);
+	
+	// 피쉬아이 왜곡 로직 (노트북 가이드 참조)
+	if (r < 1.0)
+	{
+		float theta = atan2(Coords.y, Coords.x);
+		
+		// r_distorted = r^k * strength 형태의 왜곡 적용
+		float r_distorted = pow(r, DistortionStrength);
+		
+		float2 DistortedUV;
+		DistortedUV.x = r_distorted * cos(theta);
+		DistortedUV.y = r_distorted * sin(theta);
+		
+		// 다시 [0, 1] 범위의 UV로 복원
+		float2 FinalUV = (DistortedUV / 2.0) + 0.5;
+		
+		OutColor = Texture2DSample(PostProcessInput_0, PostProcessInput_0Sampler, FinalUV);
+	}
+	else
+	{
+		OutColor = float4(0, 0, 0, 1);
+	}
+}
